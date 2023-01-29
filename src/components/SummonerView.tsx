@@ -4,6 +4,7 @@ import { api } from "../utils/api";
 import { regionAtom } from "../utils/atoms";
 import type { Summoner } from "../utils/types";
 import NameInput from "./NameInput";
+import SummonerInfo from "./SummonerInfo";
 
 interface SummonerViewProps {
   summoner: Summoner;
@@ -20,6 +21,7 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
     {
       enabled: false,
       retry: false,
+      cacheTime: 0
     }
   );
 
@@ -30,6 +32,7 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
   return (
     <div className="w-full flex flex-col items-center">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
+      {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} /> : null}
     </div>
   );
 }
