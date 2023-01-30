@@ -10,8 +10,25 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Match {
+    id           String        @id
+    startTime    DateTime
+    participants Participant[]
+}
+
+model Participant {
+    uuid     String
+    champion String
+    kills    Int
+    assists  Int
+    deaths   Int
+    win      Boolean
+    Match    Match   @relation(fields: [matchId], references: [id])
+    matchId  String
+
+    @@id([uuid, matchId])
+}
+
+model unprocessedMatches {
+    id String @id
 }
