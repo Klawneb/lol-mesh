@@ -21,9 +21,12 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
     {
       enabled: false,
       retry: false,
-      cacheTime: 0
+      cacheTime: 0,
     }
   );
+  const matchHistoryData = api.riot.getMatchHistory.useQuery({
+    summonerUUID: summonerData.data?.response.puuid,
+  });
 
   async function fetchSummoner() {
     await summonerData.refetch();
