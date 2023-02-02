@@ -10,6 +10,8 @@ const twisted = new LolApi({
   key: env.RIOT_API_KEY,
 });
 
+let currentlyProcessing = false;
+
 export const riotRouter = createTRPCRouter({
   getSummoner: publicProcedure
     .input(
@@ -38,5 +40,63 @@ export const riotRouter = createTRPCRouter({
         },
       });
       return matchHistory;
+    }),
+  updateMatchHistory: publicProcedure
+    .input(
+      z.object({
+        uuid: z.string(),
+        regionGroup: z.nativeEnum(RegionGroups),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const matches = await twisted.MatchV5.list(input.uuid, input.regionGroup);
+      for (const matchID of matches.response) {
+        await ctx.prisma.unprocessedMatches.upsert({
+          create: {
+            id: matchID,
+          },
+          update: {},
+          where: {
+            id: matchID,
+          },
+        });
+      }
+      if (!currentlyProcessing) {
+        currentlyProcessing = true;
+        while (await ctx.prisma.unprocessedMatches.findFirst()) {
+          const matchID = (await ctx.prisma.unprocessedMatches.findFirst())?.id;
+          if (matchID) {
+            const match = await twisted.MatchV5.get(matchID, input.regionGroup);
+            if (!(await ctx.prisma.match.findUnique({ where: { id: matchID } }))) {
+              await ctx.prisma.match.create({
+                data: {
+                  id: matchID,
+                  startTime: new Date(match.response.info.gameStartTimestamp),
+                },
+              });
+              for (const participant of match.response.info.participants) {
+                await ctx.prisma.participant.create({
+                  data: {
+                    assists: participant.assists,
+                    champion: participant.championName,
+                    deaths: participant.deaths,
+                    kills: participant.kills,
+                    uuid: participant.puuid,
+                    win: participant.win,
+                    matchId: matchID,
+                  },
+                });
+                await new Promise(r => setTimeout(r, 1500));
+              }
+              await ctx.prisma.unprocessedMatches.delete({
+                where: {
+                  id: matchID,
+                },
+              });
+            }
+          }
+        }
+        currentlyProcessing = false;
+      }
     }),
 });
