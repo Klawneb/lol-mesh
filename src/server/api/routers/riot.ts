@@ -50,16 +50,20 @@ export const riotRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const matches = await twisted.MatchV5.list(input.uuid, input.regionGroup);
+      const unprocessed: string[] = [];
       for (const matchID of matches.response) {
-        await ctx.prisma.unprocessedMatches.upsert({
-          create: {
-            id: matchID,
-          },
-          update: {},
-          where: {
-            id: matchID,
-          },
-        });
+        if (!(await ctx.prisma.match.findUnique({ where: { id: matchID } }))) {
+          await ctx.prisma.unprocessedMatches.upsert({
+            create: {
+              id: matchID,
+            },
+            update: {},
+            where: {
+              id: matchID,
+            },
+          });
+          unprocessed.push(matchID);
+        }
       }
       if (!currentlyProcessing) {
         currentlyProcessing = true;
@@ -86,7 +90,7 @@ export const riotRouter = createTRPCRouter({
                     matchId: matchID,
                   },
                 });
-                await new Promise(r => setTimeout(r, 1500));
+                await new Promise((r) => setTimeout(r, 1500));
               }
               await ctx.prisma.unprocessedMatches.delete({
                 where: {
@@ -98,5 +102,6 @@ export const riotRouter = createTRPCRouter({
         }
         currentlyProcessing = false;
       }
+      return unprocessed;
     }),
 });
