@@ -5,4 +5,7 @@ module.exports = {
     extend: {},
   },
   plugins: [require("daisyui"), require("tailwind-scrollbar")],
+  variants: {
+    scrollbar: ["rounded"],
+  },
 };
