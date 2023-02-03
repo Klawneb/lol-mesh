@@ -1,10 +1,13 @@
-import { Participant } from "@prisma/client";
+import { Participant, Prisma } from "@prisma/client";
 import { LolApi } from "twisted";
 import { RegionGroups, Regions } from "twisted/dist/constants/regions.js";
 import { z } from "zod";
 import { env } from "../../../env/server.mjs";
-
 import { createTRPCRouter, publicProcedure } from "../trpc";
+
+type  ParticipantWithMatch = Prisma.ParticipantGetPayload<{
+  include: { Match: true }
+}>
 
 const twisted = new LolApi({
   key: env.RIOT_API_KEY,
@@ -32,11 +35,14 @@ export const riotRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       if (!input.summonerUUID) {
-        return [] as Participant[];
+        return [] as ParticipantWithMatch[];
       }
       const matchHistory = await ctx.prisma.participant.findMany({
         where: {
           uuid: input.summonerUUID,
+        },
+        include: {
+          Match: true,
         },
       });
       return matchHistory;
