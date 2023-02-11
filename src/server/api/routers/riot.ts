@@ -3,11 +3,8 @@ import { LolApi } from "twisted";
 import { RegionGroups, Regions } from "twisted/dist/constants/regions.js";
 import { z } from "zod";
 import { env } from "../../../env/server.mjs";
+import type { ParticipantWithMatch } from "../../../utils/types.js";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-
-type  ParticipantWithMatch = Prisma.ParticipantGetPayload<{
-  include: { Match: true }
-}>
 
 const twisted = new LolApi({
   key: env.RIOT_API_KEY,

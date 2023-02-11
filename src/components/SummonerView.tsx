@@ -1,4 +1,5 @@
 import { useAtom } from "jotai";
+import { Dispatch, SetStateAction } from "react";
 import { Regions } from "twisted/dist/constants";
 import { api } from "../utils/api";
 import { regionAtom } from "../utils/atoms";
@@ -8,7 +9,7 @@ import SummonerInfo from "./SummonerInfo";
 
 interface SummonerViewProps {
   summoner: Summoner;
-  setSummoner: (summoner: Summoner) => void;
+  setSummoner: Dispatch<SetStateAction<Summoner>>;
 }
 
 export default function SummonerView({ summoner, setSummoner }: SummonerViewProps) {
@@ -24,9 +25,21 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
       cacheTime: 0,
     }
   );
-  const matchHistoryData = api.riot.getMatchHistory.useQuery({
-    summonerUUID: summonerData.data?.response.puuid,
-  });
+  const matchHistoryData = api.riot.getMatchHistory.useQuery(
+    {
+      summonerUUID: summonerData.data?.response.puuid,
+    },
+    {
+      onSuccess: (data) => {
+        setSummoner((prevState) => {
+          return {
+            ...prevState,
+            matchHistory: data,
+          };
+        });
+      },
+    }
+  );
 
   async function fetchSummoner() {
     await summonerData.refetch();
@@ -36,6 +49,7 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
     <div className="w-full flex flex-col items-center">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
       {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} /> : null}
+      {summoner.matchHistory.map((match) => <p key={match.matchId}>{match.champion}</p>)}
     </div>
   );
 }
