@@ -1,10 +1,6 @@
-import type { Prisma } from "@prisma/client"
-
-export type  ParticipantWithMatch = Prisma.ParticipantGetPayload<{
-  include: { Match: true }
-}>
+import type { Match, Prisma } from "@prisma/client"
 
 export interface Summoner {
 	name: string,
-	matchHistory: ParticipantWithMatch[]
+	matchHistory: Match[]
 }

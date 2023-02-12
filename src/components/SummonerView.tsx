@@ -1,3 +1,4 @@
+import { Participant } from "@prisma/client";
 import { useAtom } from "jotai";
 import { Dispatch, SetStateAction } from "react";
 import { Regions } from "twisted/dist/constants";
@@ -37,23 +38,33 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
             matchHistory: data,
           };
         });
-      }
+      },
     }
   );
+  const participations =
+    matchHistoryData.data
+      ?.sort((a, b) => b.startTime.valueOf() - a.startTime.valueOf())
+      .map((match) => {
+        return match.participants.find((participant) => {
+          return participant.uuid === summonerData.data?.response.puuid;
+        });
+      }) ?? ([] as Participant[]);
 
   async function fetchSummoner() {
     await summonerData.refetch();
   }
 
   async function fetchMatchHistory() {
-    await matchHistoryData.refetch()
+    await matchHistoryData.refetch();
   }
 
   return (
     <div className="w-full flex flex-col items-center">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
-      {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} fetchMatchHistory={fetchMatchHistory}/> : null}
-      {summoner.matchHistory.map((match) => <p key={match.matchId}>{match.champion}</p>)}
+      {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} fetchMatchHistory={fetchMatchHistory} /> : null}
+      {participations.map((participant) => (
+        <p key={participant?.matchId}>{participant?.champion}</p>
+      ))}
     </div>
   );
 }
