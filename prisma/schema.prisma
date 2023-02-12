@@ -28,7 +28,3 @@ model Participant {
 
     @@id([uuid, matchId])
 }
-
-model unprocessedMatches {
-    id String @id
-}
