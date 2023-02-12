@@ -37,7 +37,7 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
             matchHistory: data,
           };
         });
-      },
+      }
     }
   );
 
@@ -45,10 +45,14 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
     await summonerData.refetch();
   }
 
+  async function fetchMatchHistory() {
+    await matchHistoryData.refetch()
+  }
+
   return (
     <div className="w-full flex flex-col items-center">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
-      {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} /> : null}
+      {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} fetchMatchHistory={fetchMatchHistory}/> : null}
       {summoner.matchHistory.map((match) => <p key={match.matchId}>{match.champion}</p>)}
     </div>
   );

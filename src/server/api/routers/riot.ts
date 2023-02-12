@@ -60,9 +60,9 @@ export const riotRouter = createTRPCRouter({
       const matches = await twisted.MatchV5.list(input.uuid, input.regionGroup);
       const unprocessed: string[] = [];
       for (const matchID of matches.response) {
-        unprocessed.push(matchID);
         if (!(await ctx.prisma.match.findUnique({ where: { id: matchID } }))) {
-          await queue.add(async () => {
+          unprocessed.push(matchID);
+          void queue.add(async () => {
             const match = await twisted.MatchV5.get(matchID, input.regionGroup);
             await ctx.prisma.match.create({
               data: {
@@ -87,5 +87,20 @@ export const riotRouter = createTRPCRouter({
         }
       }
       return unprocessed;
+    }),
+  getFetchedMatches: publicProcedure
+    .input(
+      z.object({
+        matchIDs: z.array(z.string()),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      let fetched = 0;
+      for (const matchID of input.matchIDs) {
+        if (await ctx.prisma.match.findUnique({ where: { id: matchID } })) {
+          fetched += 1;
+        }
+      }
+      return fetched;
     }),
 });
