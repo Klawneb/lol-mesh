@@ -5,6 +5,7 @@ import { Regions } from "twisted/dist/constants";
 import { api } from "../utils/api";
 import { regionAtom } from "../utils/atoms";
 import type { Summoner } from "../utils/types";
+import MatchHistoryView from "./MatchHistoryView";
 import NameInput from "./NameInput";
 import SummonerInfo from "./SummonerInfo";
 
@@ -41,14 +42,6 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
       },
     }
   );
-  const participations =
-    matchHistoryData.data
-      ?.sort((a, b) => b.startTime.valueOf() - a.startTime.valueOf())
-      .map((match) => {
-        return match.participants.find((participant) => {
-          return participant.uuid === summonerData.data?.response.puuid;
-        });
-      }) ?? ([] as Participant[]);
 
   async function fetchSummoner() {
     await summonerData.refetch();
@@ -62,9 +55,7 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
     <div className="w-full flex flex-col items-center">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
       {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} fetchMatchHistory={fetchMatchHistory} /> : null}
-      {participations.map((participant) => (
-        <p key={participant?.matchId}>{participant?.champion}</p>
-      ))}
+      <MatchHistoryView matchHistory={summoner.matchHistory} puuid={summonerData.data?.response.puuid}/>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { LolApi } from "twisted";
 import { RegionGroups, Regions } from "twisted/dist/constants/regions.js";
 import { z } from "zod";
 import { env } from "../../../env/server.mjs";
+import { MatchWithParticipants } from "../../../utils/types.js";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 const twisted = new LolApi({
@@ -36,9 +37,7 @@ export const riotRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       if (!input.summonerUUID) {
-        return [] as (Match & {
-          participants: Participant[];
-        })[];
+        return [] as MatchWithParticipants[];
       }
       const matchHistory = await ctx.prisma.match.findMany({
         where: {
