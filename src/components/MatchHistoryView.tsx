@@ -1,4 +1,5 @@
 import type { Match, Participant } from "@prisma/client";
+import { formatDistanceStrict } from "date-fns";
 import Image from "next/image";
 import { MatchWithParticipants } from "../utils/types";
 
@@ -8,39 +9,35 @@ interface MatchHistoryViewProps {
 }
 
 export default function MatchHistoryView({ matchHistory, puuid }: MatchHistoryViewProps) {
-  const participations = matchHistory
-    .sort((a, b) => b.startTime.valueOf() - a.startTime.valueOf())
-    .map((match) => {
-      return match.participants.find((participant) => {
-        return participant.uuid === puuid;
-      });
-    })
-		.filter((participant) => {
-			return participant !== undefined
-		})
-
   return (
-    <div className="flex flex-col">
-      {participations.map((participation) => {
-        return (
-          <div key={participation?.matchId} className={`flex items-center w-[500px] h-24 mt-2 rounded-lg ${participation?.win ? "bg-green-300" : "bg-red-300"}`}>
-            <Image
-              alt="summoner-icon"
-              src={`https://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${participation?.champion}.png`}
-              width={128}
-              height={128}
-              className="w-20 h-20 m-4 rounded-lg"
-            />
-            <div>
-              <p className="text-black font-bold">
-                {participation?.kills}/{participation?.deaths}/{participation?.assists}
-              </p>
+    <div className="flex flex-col flex-grow h-0 overflow-auto w-[500px] scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary">
+      {matchHistory.sort((a, b) => b.startTime.valueOf() - a.startTime.valueOf()).map((match) => {
+        const participation = match.participants.find((participant) => {
+          return participant.uuid === puuid;
+        });
+        if (participation) {
+          return (
+            <div key={match.id} className={`flex w-full mt-2 min-h-[75px] rounded-lg p-2 justify-between items-center ${participation.win ? "bg-success" : "bg-error"}`}>
+              <Image
+                alt="summoner-icon"
+                src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${participation.champion}.png`}
+                width={128}
+                height={128}
+                className="w-16 h-16 rounded-lg"
+              />
+              <p>{participation.champion}</p>
+              <div>
+                <p className="text-black font-bold text-3xl">
+                  {participation.kills}/{participation.deaths}/{participation.assists}
+                </p>
+              </div>
+              <div>
+                <p className="text-black font-bold">{formatDistanceStrict(match.startTime, Date.now())} ago</p>
+              </div>
             </div>
-            <div>
-              <p>{}</p>
-            </div>
-          </div>
-        );
+          );
+        }
+        return null;
       })}
     </div>
   );
