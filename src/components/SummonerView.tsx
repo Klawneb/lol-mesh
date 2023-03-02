@@ -52,7 +52,7 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
   }
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="flex-grow flex flex-col items-center">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
       {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} fetchMatchHistory={fetchMatchHistory} /> : null}
       <MatchHistoryView matchHistory={summoner.matchHistory} puuid={summonerData.data?.response.puuid}/>
