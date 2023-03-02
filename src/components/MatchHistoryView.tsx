@@ -20,22 +20,16 @@ export default function MatchHistoryView({ matchHistory, puuid }: MatchHistoryVi
           if (participation) {
             const champion = participation.champion === "FiddleSticks" ? "Fiddlesticks" : participation.champion;
             return (
-              <div key={match.id} className={`flex w-full mt-2 min-h-[75px] rounded-lg p-2 justify-between items-center ${participation.win ? "bg-success" : "bg-error"}`}>
-                <Image
-                  alt="summoner-icon"
-                  src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${champion}.png`}
-                  width={128}
-                  height={128}
-                  className="w-16 h-16 rounded-lg"
-                />
-                <p>{participation.champion}</p>
-                <div>
-                  <p className="text-black font-bold text-3xl">
+              <div key={match.id} className={`flex w-full mt-2 min-h-[75px] rounded-lg p-2 justify-between shadow-md items-center ${participation.win ? "bg-base-100" : "bg-base-100"}`}>
+                <Image alt="summoner-icon" src={`https://ddragon.leagueoflegends.com/cdn/13.4.1/img/champion/${champion}.png`} width={128} height={128} className="w-16 h-16 rounded-lg" />
+                <div className="w-1/3">
+                  <p className="text-base-content font-bold text-3xl text-center">
                     {participation.kills}/{participation.deaths}/{participation.assists}
                   </p>
                 </div>
-                <div>
-                  <p className="text-black font-bold">{formatDistanceStrict(match.startTime, Date.now())} ago</p>
+                <div>{participation.win ? <p className="text-success">WIN</p> : <p className="text-error">LOSS</p>}</div>
+                <div className="w-1/3">
+                  <p className="text-base-content font-bold text-center">{formatDistanceStrict(match.startTime, Date.now())} ago</p>
                 </div>
               </div>
             );
