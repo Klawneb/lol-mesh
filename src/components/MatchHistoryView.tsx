@@ -2,6 +2,7 @@ import type { Match, Participant } from "@prisma/client";
 import { formatDistanceStrict } from "date-fns";
 import Image from "next/image";
 import { MatchWithParticipants } from "../utils/types";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 interface MatchHistoryViewProps {
   matchHistory: MatchWithParticipants[];
@@ -9,8 +10,10 @@ interface MatchHistoryViewProps {
 }
 
 export default function MatchHistoryView({ matchHistory, puuid }: MatchHistoryViewProps) {
+  const [animationParent] = useAutoAnimate();
+
   return (
-    <div className="flex flex-col flex-grow h-0 overflow-auto w-[500px] scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary">
+    <div ref={animationParent} className="flex flex-col flex-grow h-0 overflow-auto w-[500px] scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary">
       {matchHistory
         .sort((a, b) => b.startTime.valueOf() - a.startTime.valueOf())
         .map((match) => {

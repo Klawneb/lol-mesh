@@ -83,6 +83,9 @@ export const riotRouter = createTRPCRouter({
                   kills: participant.kills,
                   uuid: participant.puuid,
                   win: participant.win,
+                  teamID: participant.teamId,
+                  position: participant.teamPosition,
+                  surrendered: participant.gameEndedInSurrender,
                   matchId: matchID,
                 },
               });

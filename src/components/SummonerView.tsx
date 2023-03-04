@@ -25,6 +25,14 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
       enabled: false,
       retry: false,
       cacheTime: 0,
+      onSuccess: (data) => {
+        setSummoner((prevState) => {
+          return {
+            ...prevState,
+            puuid: data.response.puuid,
+          };
+        });
+      },
     }
   );
   const matchHistoryData = api.riot.getMatchHistory.useQuery(
@@ -52,10 +60,10 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
   }
 
   return (
-    <div className="flex-grow flex flex-col items-center">
+    <div className="w-1/3 flex flex-col items-center">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
       {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} fetchMatchHistory={fetchMatchHistory} /> : null}
-      <MatchHistoryView matchHistory={summoner.matchHistory} puuid={summonerData.data?.response.puuid}/>
+      <MatchHistoryView matchHistory={summoner.matchHistory} puuid={summonerData.data?.response.puuid} />
     </div>
   );
 }

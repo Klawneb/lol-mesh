@@ -17,14 +17,17 @@ model Match {
 }
 
 model Participant {
-    uuid     String
-    champion String
-    kills    Int
-    assists  Int
-    deaths   Int
-    win      Boolean
-    Match    Match   @relation(fields: [matchId], references: [id], onDelete: Cascade)
-    matchId  String
+    uuid        String
+    champion    String
+    kills       Int
+    assists     Int
+    deaths      Int
+    win         Boolean
+    Match       Match   @relation(fields: [matchId], references: [id], onDelete: Cascade)
+    matchId     String
+    teamID      Int
+    surrendered Boolean
+    position    String
 
     @@id([uuid, matchId])
 }
