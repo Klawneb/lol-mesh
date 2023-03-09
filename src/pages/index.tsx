@@ -30,9 +30,7 @@ const Home: NextPage = () => {
       </div>
       <div className="flex w-screen flex-grow">
         <SummonerView setSummoner={setSummoner1} summoner={summoner1} />
-        <VerticalDivider />
         <CommonMatchStats commonMatches={commonMatches} summoner1={summoner1} summoner2={summoner2}/>
-        <VerticalDivider />
         <SummonerView setSummoner={setSummoner2} summoner={summoner2} />
       </div>
     </div>

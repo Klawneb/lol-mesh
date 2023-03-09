@@ -43,7 +43,7 @@ export default function SummonerInfo({ summonerData, fetchMatchHistory }: Summon
   }, [fetching, fetchMatchHistory, fetchedMatches]);
 
   return (
-    <div className="bg-base-100 w-[500px] mt-2 flex rounded-lg">
+    <div className="bg-base-100 w-full mt-2 flex rounded-lg">
       <Image
         alt="summoner-icon"
         src={`https://ddragon.leagueoflegends.com/cdn/13.1.1/img/profileicon/${summonerData?.profileIconId}.png`}

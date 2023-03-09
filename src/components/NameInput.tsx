@@ -9,7 +9,7 @@ interface NameInputProps {
 export default function NameInput({ summoner, setSummoner, refetch }: NameInputProps) {
   return (
     <form
-      className="flex w-[500px]"
+      className="flex w-full"
       onSubmit={(e) => {
         e.preventDefault();
       }}
