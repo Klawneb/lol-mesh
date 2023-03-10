@@ -11,7 +11,9 @@ interface CommonMatchStatsProps {
 export default function CommonMatchStats({ commonMatches, summoner1, summoner2 }: CommonMatchStatsProps) {
   const [recentMatchLimit, setRecentMatchLimit] = useState(10);
 
-  const summoner1Participations = commonMatches.sort((a, b) => b.startTime.valueOf() - a.startTime.valueOf()).map((match) => match.participants.find((participation) => participation.uuid === summoner1.puuid));
+  const summoner1Participations = commonMatches
+    .sort((a, b) => b.startTime.valueOf() - a.startTime.valueOf())
+    .map((match) => match.participants.find((participation) => participation.uuid === summoner1.puuid));
   const winrate = (summoner1Participations.filter((participantion) => participantion?.win).length / summoner1Participations.length) * 100;
   const recentMatchList = summoner1Participations.slice(0, recentMatchLimit);
   const recentWinrate = (recentMatchList.filter((participantion) => participantion?.win).length / recentMatchList.length) * 100;
@@ -24,13 +26,12 @@ export default function CommonMatchStats({ commonMatches, summoner1, summoner2 }
             <p className="text-2xl">All Time Winrate:</p>
             <Pie
               data={[
-                { id: "Win", value: winrate.toFixed(2) },
                 { id: "Loss", value: 100 - Number(winrate.toFixed(2)) },
+                { id: "Win", value: winrate.toFixed(2) },
               ]}
               width={150}
               height={150}
-              colors={["#32a852", "#a83232"]}
-              sortByValue={true}
+              colors={["#a83232", "#32a852"]}
               enableArcLinkLabels={false}
               isInteractive={true}
               activeOuterRadiusOffset={4}
@@ -57,13 +58,12 @@ export default function CommonMatchStats({ commonMatches, summoner1, summoner2 }
             </div>
             <Pie
               data={[
-                { id: "Win", value: recentWinrate.toFixed(2) },
                 { id: "Loss", value: 100 - Number(recentWinrate.toFixed(2)) },
+                { id: "Win", value: recentWinrate.toFixed(2) },
               ]}
               width={150}
               height={150}
-              colors={["#32a852", "#a83232"]}
-              sortByValue={true}
+              colors={["#a83232", "#32a852"]}
               enableArcLinkLabels={false}
               isInteractive={true}
               activeOuterRadiusOffset={4}
