@@ -3,7 +3,6 @@ import { useState } from "react";
 import CommonMatchStats from "../components/CommonMatchStats";
 import RegionSelect from "../components/RegionSelect";
 import SummonerView from "../components/SummonerView";
-import VerticalDivider from "../components/VerticalDivider";
 import type { Summoner } from "../utils/types";
 
 const Home: NextPage = () => {
