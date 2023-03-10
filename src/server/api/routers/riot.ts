@@ -61,7 +61,9 @@ export const riotRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const matches = await twisted.MatchV5.list(input.uuid, input.regionGroup);
+      const matches = await twisted.MatchV5.list(input.uuid, input.regionGroup, {
+        count: 100
+      });
       const unprocessed: string[] = [];
       for (const matchID of matches.response) {
         if (!(await ctx.prisma.match.findUnique({ where: { id: matchID } }))) {
@@ -73,7 +75,7 @@ export const riotRouter = createTRPCRouter({
                 id: matchID,
                 startTime: new Date(match.response.info.gameStartTimestamp),
               },
-            });
+            });   
             for (const participant of match.response.info.participants) {
               await ctx.prisma.participant.create({
                 data: {
