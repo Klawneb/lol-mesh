@@ -45,11 +45,13 @@ export default function ChampionComboStats({ commonMatches, summoner1, summoner2
     }
   }
 
-  const [highestWinCombo, highestWinrate] = Array.from(championPairings.entries()).reduce((prev, curr) => (curr[1].winrate > prev[1].winrate ? curr : prev));
+  const sortedByWinrate = Array.from(championPairings.entries()).sort((a, b) => b[1].gamesPlayed - a[1].gamesPlayed);
 
   return (
-    <div>
-      <p>Your highest win rate champion combo is {highestWinCombo}</p>
+    <div className="w-full">
+      {sortedByWinrate.map(([names, stats]) => {
+        return <p key={names}></p>;
+      })}
     </div>
   );
 }

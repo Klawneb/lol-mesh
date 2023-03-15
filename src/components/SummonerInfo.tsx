@@ -16,6 +16,7 @@ export default function SummonerInfo({ summonerData, fetchMatchHistory }: Summon
   const [region] = useAtom(regionAtom);
   const [oustandingMatches, setOutstandingMatches] = useState<string[]>([]);
   const [upToDate, setUpToDate] = useState(false);
+  //Makes header file too large when pulling hundreds of games
   const fetchedMatches = api.riot.getFetchedMatches.useQuery({
     matchIDs: oustandingMatches,
   });
