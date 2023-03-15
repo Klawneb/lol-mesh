@@ -5,22 +5,24 @@ import { Regions, regionToRegionGroup } from "twisted/dist/constants";
 import type { SummonerV4DTO } from "twisted/dist/models-dto";
 import { api } from "../utils/api";
 import { regionAtom } from "../utils/atoms";
+import { MatchWithParticipants } from "../utils/types";
 
 interface SummonerInfoProps {
   summonerData: SummonerV4DTO;
   fetchMatchHistory: () => void;
+  matchHistory: MatchWithParticipants[];
 }
 
-export default function SummonerInfo({ summonerData, fetchMatchHistory }: SummonerInfoProps) {
+export default function SummonerInfo({ summonerData, fetchMatchHistory, matchHistory }: SummonerInfoProps) {
   const updateMatchHistory = api.riot.updateMatchHistory.useMutation();
   const [region] = useAtom(regionAtom);
   const [oustandingMatches, setOutstandingMatches] = useState<string[]>([]);
   const [upToDate, setUpToDate] = useState(false);
-  //Makes header file too large when pulling hundreds of games
-  const fetchedMatches = api.riot.getFetchedMatches.useQuery({
-    matchIDs: oustandingMatches,
-  });
-  const fetching = oustandingMatches.length != fetchedMatches.data;
+  const [checking, setChecking] = useState(false);
+  const fetchedMatches = oustandingMatches.reduce((prev, curr) => {
+    return prev + (matchHistory.map((match) => match.id).includes(curr) ? 1 : 0);
+  }, 0);
+  const fetching = oustandingMatches.length != fetchedMatches;
 
   useEffect(() => {
     if (upToDate) {
@@ -35,7 +37,6 @@ export default function SummonerInfo({ summonerData, fetchMatchHistory }: Summon
     if (fetching) {
       refreshInterval = setInterval(() => {
         fetchMatchHistory();
-        void fetchedMatches.refetch();
       }, 1000);
     }
     return () => {
@@ -59,19 +60,21 @@ export default function SummonerInfo({ summonerData, fetchMatchHistory }: Summon
       <div className="flex flex-col my-auto ml-auto mr-4">
         <button
           onClick={async () => {
+            setChecking(true);
             const outstandingIDs = await updateMatchHistory.mutateAsync({
               uuid: summonerData.puuid,
               regionGroup: regionToRegionGroup(Regions[region as keyof typeof Regions]),
             });
+            setChecking(false);
             if (outstandingIDs.length === 0) {
               setUpToDate(true);
             } else {
               setOutstandingMatches(outstandingIDs);
             }
           }}
-          className={`btn btn-secondary transition-all ${upToDate ? "btn-info" : ""} ${fetching ? "loading btn-info disabled" : ""}`}
+          className={`btn btn-secondary transition-all ${upToDate ? "btn-info" : ""} ${fetching || checking ? "loading btn-info disabled" : ""}`}
         >
-          {upToDate ? "Up to date" : fetching ? `Fetching ${fetchedMatches.data ?? ""}/${oustandingMatches.length}` : "Update"}
+          {checking ? "Checking" : upToDate ? "Up to date" : fetching ? `Fetching ${fetchedMatches}/${oustandingMatches.length}` : "Update"}
         </button>
       </div>
     </div>
