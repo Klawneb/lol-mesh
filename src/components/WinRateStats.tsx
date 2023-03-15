@@ -49,6 +49,7 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
                 setRecentMatchLimit(Number(e.target.value));
                 console.log(recentMatchList);
               }}
+              value={recentMatchLimit}
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
