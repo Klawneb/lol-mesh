@@ -1,6 +1,6 @@
-import { Match, Participant, Prisma } from "@prisma/client";
-import PQueue from "p-queue";
+import { Match, Participant, Prisma, PrismaClient } from "@prisma/client";
 import { LolApi } from "twisted";
+import Queue from "better-queue";
 import { RegionGroups, Regions } from "twisted/dist/constants/regions.js";
 import { ApiResponseDTO, MatchDto, MatchV5DTOs } from "twisted/dist/models-dto/index.js";
 import { MatchQueryV5DTO } from "twisted/dist/models-dto/matches/query-v5/match-query-v5.dto.js";
@@ -9,15 +9,51 @@ import { env } from "../../../env/server.mjs";
 import { MatchWithParticipants } from "../../../utils/types.js";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
+interface queueObject {
+  id: string;
+  region: RegionGroups;
+  prisma: PrismaClient;
+}
+
 const twisted = new LolApi({
   key: env.RIOT_API_KEY,
 });
 
-const queue = new PQueue({
-  concurrency: 1,
-  interval: 1500,
-  intervalCap: 1,
-});
+const queue = new Queue(
+  (input: queueObject, cb) => {
+    void addMatchID(input.id, input.region, input.prisma);
+    cb();
+  },
+  {
+    afterProcessDelay: 1500,
+  }
+);
+
+async function addMatchID(matchID: string, region: RegionGroups, prisma: PrismaClient) {
+  const match = await twisted.MatchV5.get(matchID, region);
+  await prisma.match.create({
+    data: {
+      id: matchID,
+      startTime: new Date(match.response.info.gameStartTimestamp),
+    },
+  });
+  for (const participant of match.response.info.participants) {
+    await prisma.participant.create({
+      data: {
+        assists: participant.assists,
+        champion: participant.championName,
+        deaths: participant.deaths,
+        kills: participant.kills,
+        uuid: participant.puuid,
+        win: participant.win,
+        teamID: participant.teamId,
+        position: participant.teamPosition,
+        surrendered: participant.gameEndedInSurrender,
+        matchId: matchID,
+      },
+    });
+  }
+}
 
 async function fetchMatchIDs(uuid: string, regionGroup: RegionGroups) {
   let matches: string[] = [];
@@ -82,30 +118,10 @@ export const riotRouter = createTRPCRouter({
       for (const matchID of matches) {
         if (!(await ctx.prisma.match.findUnique({ where: { id: matchID } }))) {
           unprocessed.push(matchID);
-          void queue.add(async () => {
-            const match = await twisted.MatchV5.get(matchID, input.regionGroup);
-            await ctx.prisma.match.create({
-              data: {
-                id: matchID,
-                startTime: new Date(match.response.info.gameStartTimestamp),
-              },
-            });
-            for (const participant of match.response.info.participants) {
-              await ctx.prisma.participant.create({
-                data: {
-                  assists: participant.assists,
-                  champion: participant.championName,
-                  deaths: participant.deaths,
-                  kills: participant.kills,
-                  uuid: participant.puuid,
-                  win: participant.win,
-                  teamID: participant.teamId,
-                  position: participant.teamPosition,
-                  surrendered: participant.gameEndedInSurrender,
-                  matchId: matchID,
-                },
-              });
-            }
+          queue.push({
+            id: matchID,
+            region: input.regionGroup,
+            prisma: ctx.prisma,
           });
         }
       }
