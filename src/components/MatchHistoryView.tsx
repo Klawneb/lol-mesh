@@ -17,7 +17,7 @@ export default function MatchHistoryView({ matchHistory, puuid }: MatchHistoryVi
   return (
     <div ref={animationParent} className="flex flex-col flex-grow h-0 overflow-scroll w-full scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary mt-2">
       {matchHistory
-        .slice(matchHistory.length - matchesShown, matchHistory.length)
+        .slice(-matchesShown)
         .sort((a, b) => b.startTime.valueOf() - a.startTime.valueOf())
         .map((match) => {
           const participation = match.participants.find((participant) => {
@@ -43,9 +43,9 @@ export default function MatchHistoryView({ matchHistory, puuid }: MatchHistoryVi
           return null;
         })}
 
-      {matchHistory.length > 0 ? (
+      {matchHistory.length > matchesShown ? (
         <div
-          className="flex w-full mb-2 min-h-[75px] rounded-lg p-2 shadow-md items-center bg-base-100 justify-center text-3xl hover:cursor-pointer transition-all hover:b"
+          className="flex w-full mb-2 min-h-[75px] rounded-lg p-2 shadow-md items-center bg-base-100 justify-center text-3xl hover:cursor-pointer transition-all hover:b hover:bg-gray-700"
           onClick={() => setMatchesShown((prev) => prev + 10)}
         >
           Load more
