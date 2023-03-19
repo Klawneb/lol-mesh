@@ -13,6 +13,7 @@ datasource db {
 model Match {
     id           String        @id
     startTime    DateTime
+    matchLength  Int
     participants Participant[]
 }
 
