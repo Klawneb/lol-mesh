@@ -55,7 +55,7 @@ export default function SummonerInfo({ summonerData, fetchMatchHistory, matchHis
       />
       <div className="flex flex-col my-auto ml-2">
         <p className="text-4xl font-semibold">{summonerData.name}</p>
-        <p className="mt-2 text-xl">Level {summonerData.summonerLevel}</p>
+        <p className="mt-2 text-xl">Level {summonerData.summonerLevel} - {matchHistory.length} games loaded</p>
       </div>
       <div className="flex flex-col my-auto ml-auto mr-4">
         <button
