@@ -18,8 +18,8 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
   console.log(recentTotalWins);
 
   return (
-    <div className="flex">
-      <div className="flex bg-base-100 items-center w-1/2 justify-around p-4 m-2 rounded-xl">
+    <>
+      <div className="flex bg-base-100 items-center justify-around rounded-xl">
         <div>
           <p className="text-2xl">All Time Winrate:</p>
           <p className="text-5xl">{totalWinrate.toFixed(2)}%</p>
@@ -29,7 +29,7 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
             { id: "Loss", value: participants.length - totalWins },
             { id: "Win", value: totalWins },
           ]}
-          width={300}
+          width={150}
           height={150}
           colors={["#a83232", "#32a852"]}
           enableArcLinkLabels={false}
@@ -39,7 +39,7 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
           margin={{ bottom: 10, left: 10, right: 10, top: 10 }}
         />
       </div>
-      <div className="flex bg-base-100 items-center w-1/2 justify-around p-4 m-2 rounded-xl">
+      <div className="flex bg-base-100 items-center justify-around rounded-xl">
         <div>
           <div className="flex items-center">
             <p className="text-2xl align-middle">Winrate last</p>
@@ -75,6 +75,6 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
           margin={{ bottom: 10, left: 10, right: 10, top: 10 }}
         />
       </div>
-    </div>
+    </>
   );
 }

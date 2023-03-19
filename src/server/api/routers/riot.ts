@@ -35,6 +35,7 @@ async function addMatchID(matchID: string, region: RegionGroups, prisma: PrismaC
     data: {
       id: matchID,
       startTime: new Date(match.response.info.gameStartTimestamp),
+      matchLength: match.response.info.gameDuration
     },
   });
   for (const participant of match.response.info.participants) {
@@ -57,7 +58,7 @@ async function addMatchID(matchID: string, region: RegionGroups, prisma: PrismaC
 
 async function fetchMatchIDs(uuid: string, regionGroup: RegionGroups) {
   let matches: string[] = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1; i++) {
     const ids = (
       await twisted.MatchV5.list(uuid, regionGroup, {
         count: 100,

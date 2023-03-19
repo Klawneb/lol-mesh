@@ -12,7 +12,7 @@ export default function SurrenderStats({ participants }: SurrenderStatsProps) {
   console.log(`you surrendered: ${totalSurrenders} games`);
 
   return (
-    <div className="flex bg-base-100 items-center w-1/2 justify-around p-4 m-2 rounded-xl">
+    <div className="flex bg-base-100 items-center p-2 justify-around rounded-xl">
       <div>
         <p className="text-2xl">Surrender Rate:</p>
         <p className="text-5xl">{surrenderRate.toFixed(2)}%</p>

@@ -2,6 +2,7 @@ import { Pie } from "@nivo/pie";
 import { useState } from "react";
 import type { MatchWithParticipants, Summoner } from "../utils/types";
 import ChampionComboStats from "./ChampionComboStats";
+import GameLengthStats from "./GameLengthStats";
 import SurrenderStats from "./SurrenderStats";
 import WinRateStats from "./WinRateStats";
 
@@ -20,9 +21,12 @@ export default function CommonMatchStats({ commonMatches, summoner1, summoner2 }
     <div className="flex-grow bg-base-200 m-4 p-4 rounded-xl">
       {commonMatches.length > 0 ? (
         <div>
-          <WinRateStats participants={summoner1Participations} />
-          <SurrenderStats participants={summoner1Participations}/>
-          <ChampionComboStats commonMatches={commonMatches} summoner1={summoner1} summoner2={summoner2}/>
+          <div className="grid grid-cols-2 gap-3">
+            <WinRateStats participants={summoner1Participations} />
+            <SurrenderStats participants={summoner1Participations} />
+            <GameLengthStats matchList={commonMatches} />
+          </div>
+          <ChampionComboStats commonMatches={commonMatches} summoner1={summoner1} summoner2={summoner2} />
         </div>
       ) : null}
     </div>
