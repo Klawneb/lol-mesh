@@ -20,7 +20,7 @@ export default function CommonMatchStats({ commonMatches, summoner1, summoner2 }
   return (
     <div className="flex-grow bg-base-200 m-4 p-4 rounded-xl">
       {commonMatches.length > 0 ? (
-        <div>
+        <div className="flex flex-col h-full">
           <div className="grid grid-cols-2 gap-3">
             <WinRateStats participants={summoner1Participations} />
             <SurrenderStats participants={summoner1Participations} />
