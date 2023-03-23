@@ -7,14 +7,22 @@ interface GameLengthStatsProps {
 }
 
 export default function GameLengthStats({ matchList }: GameLengthStatsProps) {
-  const totalLength = matchList.reduce((prev, curr) => prev + curr.matchLength, 0) * 1000;
+  const totalLength =
+    matchList.reduce((prev, curr) => {
+      if (curr.matchLength.toString().length > 5) {
+        return prev + (curr.matchLength / 1000);
+      }
+      return prev + curr.matchLength;
+    }, 0) * 1000;
   const averageGameLength = totalLength / matchList.length;
+
+  console.log(matchList);
 
   return (
     <div className="flex bg-base-100 p-2 items-center rounded-xl">
       <div className="ml-[5%]">
         <p className="text-2xl">Average game length:</p>
-        <p className="text-5xl">{format(averageGameLength, 'mm:ss')}</p>
+        <p className="text-5xl">{format(averageGameLength, "mm:ss")}</p>
       </div>
     </div>
   );
