@@ -45,7 +45,7 @@ export default function MatchHistoryView({ matchHistory, puuid }: MatchHistoryVi
 
       {matchHistory.length > matchesShown ? (
         <div
-          className="flex w-full mb-2 min-h-[75px] rounded-lg p-2 shadow-md items-center bg-base-100 justify-center text-3xl hover:cursor-pointer transition-all hover:b hover:bg-gray-700"
+          className="flex w-full mb-2 min-h-[75px] rounded-lg p-2 shadow-md items-center bg-base-100 justify-center text-3xl hover:cursor-pointer transition-all hover:b hover:bg-secondary"
           onClick={() => setMatchesShown((prev) => prev + 10)}
         >
           Load more
