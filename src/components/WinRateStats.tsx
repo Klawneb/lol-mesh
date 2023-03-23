@@ -15,7 +15,6 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
   const recentMatchList = participants.slice(0, recentMatchLimit);
   const recentTotalWins = recentMatchList.filter((participantion) => participantion?.win).length;
   const recentWinrate = (recentTotalWins / recentMatchList.length) * 100;
-  console.log(recentTotalWins);
 
   return (
     <>
@@ -47,7 +46,6 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
               className="select select-bordered select-sm mx-1 mt-1"
               onChange={(e) => {
                 setRecentMatchLimit(Number(e.target.value));
-                console.log(recentMatchList);
               }}
               value={recentMatchLimit}
             >

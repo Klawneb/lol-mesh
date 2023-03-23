@@ -9,8 +9,6 @@ export default function SurrenderStats({ participants }: SurrenderStatsProps) {
   const totalSurrenders = participants.reduce((prev, curr) => prev + (curr?.surrendered && !curr.win ? 1 : 0), 0);
   const surrenderRate = (totalSurrenders / participants.length) * 100;
 
-  console.log(`you surrendered: ${totalSurrenders} games`);
-
   return (
     <div className="flex bg-base-100 items-center p-2 justify-around rounded-xl">
       <div>
