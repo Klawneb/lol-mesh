@@ -22,6 +22,7 @@ export default function NameInput({ summoner, setSummoner, refetch }: NameInputP
           setSummoner({
             ...summoner,
             name: e.target.value,
+            puuid: ""
           })
         }
       />

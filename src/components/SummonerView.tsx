@@ -26,6 +26,7 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
       retry: false,
       cacheTime: 0,
       onSuccess: (data) => {
+        console.log(data)
         setSummoner((prevState) => {
           return {
             ...prevState,

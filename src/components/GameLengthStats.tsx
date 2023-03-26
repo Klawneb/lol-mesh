@@ -1,22 +1,21 @@
 import { Pie } from "@nivo/pie";
 import type { Match } from "@prisma/client";
 import { format } from "date-fns";
+import { MatchWithParticipants } from "../utils/types";
 
 interface GameLengthStatsProps {
-  matchList: Match[];
+  matchList: MatchWithParticipants[];
 }
 
 export default function GameLengthStats({ matchList }: GameLengthStatsProps) {
   const totalLength =
     matchList.reduce((prev, curr) => {
       if (curr.matchLength.toString().length > 5) {
-        return prev + (curr.matchLength / 1000);
+        return prev + curr.matchLength / 1000;
       }
       return prev + curr.matchLength;
     }, 0) * 1000;
   const averageGameLength = totalLength / matchList.length;
-
-  console.log(matchList);
 
   return (
     <div className="flex bg-base-100 p-2 items-center rounded-xl">

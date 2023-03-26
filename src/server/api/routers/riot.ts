@@ -35,7 +35,7 @@ async function addMatchID(matchID: string, region: RegionGroups, prisma: PrismaC
     data: {
       id: matchID,
       startTime: new Date(match.response.info.gameStartTimestamp),
-      matchLength: match.response.info.gameDuration
+      matchLength: match.response.info.gameDuration,
     },
   });
   for (const participant of match.response.info.participants) {
@@ -142,5 +142,23 @@ export const riotRouter = createTRPCRouter({
         }
       }
       return fetched;
+    }),
+  getCommonMatches: publicProcedure
+    .input(
+      z.object({
+        summoner1puuid: z.string(),
+        summoner2puuid: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const matches = await ctx.prisma.match.findMany({
+        where: {
+          AND: [{ participants: { some: { uuid: input.summoner1puuid } } }, { participants: { some: { uuid: input.summoner2puuid } } }],
+        },
+        include: {
+          participants: true,
+        },
+      });
+      return matches;
     }),
 });
