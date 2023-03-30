@@ -8,12 +8,10 @@ import type { Summoner } from "../utils/types";
 const Home: NextPage = () => {
   const [summoner1, setSummoner1] = useState<Summoner>({
     name: "",
-    matchHistory: [],
     puuid: "",
   });
   const [summoner2, setSummoner2] = useState<Summoner>({
     name: "",
-    matchHistory: [],
     puuid: "",
   });
 

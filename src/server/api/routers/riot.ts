@@ -86,6 +86,8 @@ export const riotRouter = createTRPCRouter({
     .input(
       z.object({
         summonerUUID: z.string().optional(),
+        start: z.number(),
+        amount: z.number(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -102,6 +104,11 @@ export const riotRouter = createTRPCRouter({
         },
         include: {
           participants: true,
+        },
+        skip: input.start,
+        take: input.amount,
+        orderBy: {
+          startTime: "desc",
         },
       });
       return matchHistory;

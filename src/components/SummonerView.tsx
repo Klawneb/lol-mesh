@@ -1,6 +1,6 @@
 import { Participant } from "@prisma/client";
 import { useAtom } from "jotai";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Regions } from "twisted/dist/constants";
 import { api } from "../utils/api";
 import { regionAtom } from "../utils/atoms";
@@ -16,6 +16,7 @@ interface SummonerViewProps {
 
 export default function SummonerView({ summoner, setSummoner }: SummonerViewProps) {
   const [region] = useAtom(regionAtom);
+  const [isFetching, setIsFetching] = useState(false);
   const summonerData = api.riot.getSummoner.useQuery(
     {
       region: Regions[region as keyof typeof Regions],
@@ -36,35 +37,16 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
       },
     }
   );
-  const matchHistoryData = api.riot.getMatchHistory.useQuery(
-    {
-      summonerUUID: summonerData.data?.response.puuid,
-    },
-    {
-      onSuccess: (data) => {
-        setSummoner((prevState) => {
-          return {
-            ...prevState,
-            matchHistory: data,
-          };
-        });
-      },
-    }
-  );
 
   async function fetchSummoner() {
     await summonerData.refetch();
   }
 
-  async function fetchMatchHistory() {
-    await matchHistoryData.refetch();
-  }
-
   return (
     <div className="w-1/4 flex flex-col items-center bg-base-200 m-4 p-4 rounded-xl">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
-      {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} fetchMatchHistory={fetchMatchHistory} matchHistory={summoner.matchHistory} /> : null}
-      <MatchHistoryView matchHistory={summoner.matchHistory} puuid={summonerData.data?.response.puuid} />
+      {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} isFetching={isFetching} setIsFetching={setIsFetching}/> : null}
+      <MatchHistoryView puuid={summonerData.data?.response.puuid} isFetching={isFetching}/>
     </div>
   );
 }

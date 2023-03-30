@@ -1,48 +1,62 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Regions, regionToRegionGroup } from "twisted/dist/constants";
 import type { SummonerV4DTO } from "twisted/dist/models-dto";
 import { api } from "../utils/api";
-import { regionAtom } from "../utils/atoms";
+import { globalFetchingAtom, regionAtom } from "../utils/atoms";
 import { MatchWithParticipants } from "../utils/types";
 
 interface SummonerInfoProps {
   summonerData: SummonerV4DTO;
-  fetchMatchHistory: () => void;
-  matchHistory: MatchWithParticipants[];
+  isFetching: boolean;
+  setIsFetching: Dispatch<SetStateAction<boolean>>
 }
 
-export default function SummonerInfo({ summonerData, fetchMatchHistory, matchHistory }: SummonerInfoProps) {
+export default function SummonerInfo({ summonerData, isFetching, setIsFetching }: SummonerInfoProps) {
   const updateMatchHistory = api.riot.updateMatchHistory.useMutation();
   const [region] = useAtom(regionAtom);
-  const [oustandingMatches, setOutstandingMatches] = useState<string[]>([]);
-  const [upToDate, setUpToDate] = useState(false);
   const [checking, setChecking] = useState(false);
-  const fetchedMatches = oustandingMatches.reduce((prev, curr) => {
-    return prev + (matchHistory.map((match) => match.id).includes(curr) ? 1 : 0);
-  }, 0);
-  const fetching = oustandingMatches.length != fetchedMatches;
+  const [upToDate, setUpToDate] = useState(false);
+  const [globalFetching, setGlobalFetching] = useAtom(globalFetchingAtom)
+  const [outstandingIDs, setOutstandingIDs] = useState<string[]>([]);
+  const fetchedMatches = api.riot.getFetchedMatches.useQuery(
+    {
+      matchIDs: outstandingIDs,
+    },
+    {
+      enabled: false,
+    }
+  );
 
   useEffect(() => {
-    if (upToDate) {
-      const timeout = setTimeout(() => {
+    async function checkFetched() {
+      await fetchedMatches.refetch();
+      if (fetchedMatches.data === outstandingIDs.length) {
+        setIsFetching(false);
+        setGlobalFetching(false);
+      }
+    }
+
+    let fetchTimer: NodeJS.Timer;
+    if (isFetching) {
+      fetchTimer = setInterval(() => {
+        void checkFetched();
+      }, 1500);
+    }
+    return () => {
+      clearInterval(fetchTimer);
+    };
+  }, [fetchedMatches, isFetching, outstandingIDs.length, setGlobalFetching, setIsFetching]);
+
+  function toggleUpToDate() {
+    if (!upToDate) {
+      setUpToDate(true);
+      setTimeout(() => {
         setUpToDate(false);
       }, 3000);
     }
-  }, [upToDate]);
-
-  useEffect(() => {
-    let refreshInterval: NodeJS.Timer;
-    if (fetching) {
-      refreshInterval = setInterval(() => {
-        fetchMatchHistory();
-      }, 1000);
-    }
-    return () => {
-      clearInterval(refreshInterval);
-    };
-  }, [fetching, fetchMatchHistory, fetchedMatches]);
+  }
 
   return (
     <div className="bg-base-100 w-full mt-2 flex rounded-lg">
@@ -55,7 +69,7 @@ export default function SummonerInfo({ summonerData, fetchMatchHistory, matchHis
       />
       <div className="flex flex-col my-auto ml-2">
         <p className="text-4xl font-semibold">{summonerData.name}</p>
-        <p className="mt-2 text-xl">Level {summonerData.summonerLevel} - {matchHistory.length} games loaded</p>
+        <p className="mt-2 text-xl">Level {summonerData.summonerLevel}</p>
       </div>
       <div className="flex flex-col my-auto ml-auto mr-4">
         <button
@@ -65,16 +79,18 @@ export default function SummonerInfo({ summonerData, fetchMatchHistory, matchHis
               uuid: summonerData.puuid,
               regionGroup: regionToRegionGroup(Regions[region as keyof typeof Regions]),
             });
-            setChecking(false);
             if (outstandingIDs.length === 0) {
-              setUpToDate(true);
+              toggleUpToDate();
             } else {
-              setOutstandingMatches(outstandingIDs);
+              setOutstandingIDs(outstandingIDs);
+              setIsFetching(true);
+              setGlobalFetching(true);
             }
+            setChecking(false);
           }}
-          className={`btn btn-secondary transition-all ${upToDate ? "btn-info" : ""} ${fetching || checking ? "loading btn-info disabled" : ""}`}
+          className={`btn btn-secondary transition-all ${upToDate ? "btn-info disabled" : ""} ${isFetching || checking ? "loading btn-info disabled" : ""}`}
         >
-          {checking ? "Checking" : upToDate ? "Up to date" : fetching ? `Fetching ${fetchedMatches}/${oustandingMatches.length}` : "Update"}
+          {checking ? "Checking" : upToDate ? "Up to date" : isFetching ? `Fetching ${fetchedMatches.data ?? "?"}/${outstandingIDs.length}` : "Update"}
         </button>
       </div>
     </div>
