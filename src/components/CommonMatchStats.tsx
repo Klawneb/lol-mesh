@@ -2,7 +2,7 @@ import { Pie } from "@nivo/pie";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { api } from "../utils/api";
-import { globalFetchingAtom } from "../utils/atoms";
+import { globalFetchingAtom, summoner1FilterAtom, summoner2FilterAtom } from "../utils/atoms";
 import type { MatchWithParticipants, Summoner } from "../utils/types";
 import ChampionComboStats from "./ChampionComboStats";
 import GameLengthStats from "./GameLengthStats";
@@ -16,8 +16,15 @@ interface CommonMatchStatsProps {
 
 export default function CommonMatchStats({ summoner1, summoner2 }: CommonMatchStatsProps) {
   const [globalFetching] = useAtom(globalFetchingAtom);
+  const [summoner1Filter] = useAtom(summoner1FilterAtom);
+  const [summoner2Filter] = useAtom(summoner2FilterAtom);
   const commonMatches = api.riot.getCommonMatches.useQuery(
-    { summoner1puuid: summoner1.puuid, summoner2puuid: summoner2.puuid },
+    {
+      summoner1puuid: summoner1.puuid,
+      summoner1filter: summoner1Filter,
+      summoner2puuid: summoner2.puuid,
+      summoner2filter: summoner2Filter,
+    },
     {
       refetchInterval: globalFetching ? 1500 : false,
     }
@@ -35,8 +42,6 @@ export default function CommonMatchStats({ summoner1, summoner2 }: CommonMatchSt
           </div>
           <ChampionComboStats commonMatches={commonMatches.data} summoner1={summoner1} summoner2={summoner2} />
         </div>
-      ) : summoner1.puuid && summoner2.puuid ? (
-        <p>No common matches found!</p>
       ) : null}
     </div>
   );

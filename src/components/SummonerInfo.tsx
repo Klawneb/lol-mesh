@@ -10,7 +10,7 @@ import { MatchWithParticipants } from "../utils/types";
 interface SummonerInfoProps {
   summonerData: SummonerV4DTO;
   isFetching: boolean;
-  setIsFetching: Dispatch<SetStateAction<boolean>>
+  setIsFetching: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function SummonerInfo({ summonerData, isFetching, setIsFetching }: SummonerInfoProps) {
@@ -18,7 +18,7 @@ export default function SummonerInfo({ summonerData, isFetching, setIsFetching }
   const [region] = useAtom(regionAtom);
   const [checking, setChecking] = useState(false);
   const [upToDate, setUpToDate] = useState(false);
-  const [globalFetching, setGlobalFetching] = useAtom(globalFetchingAtom)
+  const [globalFetching, setGlobalFetching] = useAtom(globalFetchingAtom);
   const [outstandingIDs, setOutstandingIDs] = useState<string[]>([]);
   const fetchedMatches = api.riot.getFetchedMatches.useQuery(
     {
@@ -28,6 +28,9 @@ export default function SummonerInfo({ summonerData, isFetching, setIsFetching }
       enabled: false,
     }
   );
+  const champPool = api.riot.getChampionPool.useQuery({
+    uuid: summonerData.puuid,
+  });
 
   useEffect(() => {
     async function checkFetched() {
@@ -59,7 +62,7 @@ export default function SummonerInfo({ summonerData, isFetching, setIsFetching }
   }
 
   return (
-    <div className="bg-base-100 w-full mt-2 flex rounded-lg">
+    <div className="bg-base-100 w-full mt-2 flex justify-between rounded-lg">
       <Image
         alt="summoner-icon"
         src={`https://ddragon.leagueoflegends.com/cdn/13.1.1/img/profileicon/${summonerData?.profileIconId}.png`}
@@ -67,11 +70,30 @@ export default function SummonerInfo({ summonerData, isFetching, setIsFetching }
         height={128}
         className="w-24 h-24 m-4 rounded-lg"
       />
-      <div className="flex flex-col my-auto ml-2">
-        <p className="text-4xl font-semibold">{summonerData.name}</p>
+      <div className="flex flex-col my-auto ml-2 max-w overflow-hidden">
+        <p className="text-4xl font-semibold truncate ">{summonerData.name}</p>
         <p className="mt-2 text-xl">Level {summonerData.summonerLevel}</p>
       </div>
-      <div className="flex flex-col my-auto ml-auto mr-4">
+      <div className="flex flex-col justify-center items-center">
+        <p>Filter:</p>
+        <select className="select select-bordered bg-base-200">
+          <option value="ANY">-- ANY --</option>
+          <option value="TOP">-- TOP --</option>
+          <option value="JUNGLE">-- JUNGLE --</option>
+          <option value="MIDDLE">-- MID --</option>
+          <option value="BOTTOM">-- BOT --</option>
+          <option value="UTILITY">-- SUPPORT --</option>
+          {champPool.data &&
+            champPool.data.sort().map((champName) => {
+              return (
+                <option key={champName} value={champName}>
+                  {champName}
+                </option>
+              );
+            })}
+        </select>
+      </div>
+      <div className="flex flex-col my-auto mr-4">
         <button
           onClick={async () => {
             setChecking(true);

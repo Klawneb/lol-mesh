@@ -70,6 +70,13 @@ async function fetchMatchIDs(uuid: string, regionGroup: RegionGroups) {
   return matches;
 }
 
+function isPosition(str: string) {
+  if (str === "TOP" || str === "JUNGLE" || str === "MIDDLE" || str === "BOTTOM" || str === "UTILITY") {
+    return true;
+  }
+  return false;
+}
+
 export const riotRouter = createTRPCRouter({
   getSummoner: publicProcedure
     .input(
@@ -154,18 +161,54 @@ export const riotRouter = createTRPCRouter({
     .input(
       z.object({
         summoner1puuid: z.string(),
+        summoner1filter: z.string(),
         summoner2puuid: z.string(),
+        summoner2filter: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const matches = await ctx.prisma.match.findMany({
+      const summoner1 = {
+        participants: {
+          some: {
+            uuid: input.summoner1puuid,
+            ...(isPosition(input.summoner1filter) ? { position: input.summoner1filter } : input.summoner1filter != "ANY" ? { champion: input.summoner1filter } : {}),
+          },
+        },
+      };
+      const summoner2 = {
+        participants: {
+          some: {
+            uuid: input.summoner2puuid,
+            ...(isPosition(input.summoner2filter) ? { position: input.summoner2filter } : input.summoner2filter != "ANY" ? { champion: input.summoner2filter } : {}),
+          },
+        },
+      };
+
+      return await ctx.prisma.match.findMany({
         where: {
-          AND: [{ participants: { some: { uuid: input.summoner1puuid } } }, { participants: { some: { uuid: input.summoner2puuid } } }],
+          AND: [summoner1, summoner2],
         },
         include: {
           participants: true,
         },
       });
-      return matches;
+    }),
+  getChampionPool: publicProcedure
+    .input(
+      z.object({
+        uuid: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const participations = await ctx.prisma.participant.findMany({ where: { uuid: input.uuid } });
+      const champPool: string[] = [];
+
+      participations.forEach((participant) => {
+        if (!champPool.includes(participant.champion)) {
+          champPool.push(participant.champion);
+        }
+      });
+
+      return champPool;
     }),
 });
