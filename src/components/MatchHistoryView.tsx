@@ -31,7 +31,7 @@ export default function MatchHistoryView({ puuid, isFetching, summoner }: MatchH
       keepPreviousData: true,
       onSuccess: (data) => {
         console.log(data)
-        if (data.length === 0) {
+        if (data.length < matchesShown) {
           setIsMatchesRemaining(false);
         } else {
           setIsMatchesRemaining(true);
