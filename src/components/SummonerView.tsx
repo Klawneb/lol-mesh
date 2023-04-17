@@ -45,8 +45,8 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
   return (
     <div className="w-1/4 flex flex-col items-center bg-base-200 m-4 p-4 rounded-xl">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
-      {summonerData.isFetched && summonerData.data ? <SummonerInfo summonerData={summonerData.data?.response} isFetching={isFetching} setIsFetching={setIsFetching}/> : null}
-      <MatchHistoryView puuid={summonerData.data?.response.puuid} isFetching={isFetching}/>
+      {summonerData.isFetched && summonerData.data ? <SummonerInfo summoner={summoner} summonerData={summonerData.data?.response} isFetching={isFetching} setIsFetching={setIsFetching}/> : null}
+      <MatchHistoryView puuid={summonerData.data?.response.puuid} isFetching={isFetching} summoner={summoner}/>
     </div>
   );
 }

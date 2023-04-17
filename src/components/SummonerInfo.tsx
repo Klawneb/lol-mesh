@@ -5,21 +5,23 @@ import { Regions, regionToRegionGroup } from "twisted/dist/constants";
 import type { SummonerV4DTO } from "twisted/dist/models-dto";
 import { api } from "../utils/api";
 import { globalFetchingAtom, regionAtom } from "../utils/atoms";
-import { MatchWithParticipants } from "../utils/types";
+import { Summoner } from "../utils/types";
 
 interface SummonerInfoProps {
+  summoner: Summoner;
   summonerData: SummonerV4DTO;
   isFetching: boolean;
   setIsFetching: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function SummonerInfo({ summonerData, isFetching, setIsFetching }: SummonerInfoProps) {
+export default function SummonerInfo({ summoner, summonerData, isFetching, setIsFetching }: SummonerInfoProps) {
   const updateMatchHistory = api.riot.updateMatchHistory.useMutation();
   const [region] = useAtom(regionAtom);
   const [checking, setChecking] = useState(false);
   const [upToDate, setUpToDate] = useState(false);
   const [globalFetching, setGlobalFetching] = useAtom(globalFetchingAtom);
   const [outstandingIDs, setOutstandingIDs] = useState<string[]>([]);
+  const [summonerFilter, setSummonerFilter] = useAtom(summoner.summonerFilter);
   const fetchedMatches = api.riot.getFetchedMatches.useQuery(
     {
       matchIDs: outstandingIDs,
@@ -76,7 +78,7 @@ export default function SummonerInfo({ summonerData, isFetching, setIsFetching }
       </div>
       <div className="flex flex-col justify-center items-center">
         <p>Filter:</p>
-        <select className="select select-bordered bg-base-200">
+        <select className="select select-bordered bg-base-200" onChange={(e) => setSummonerFilter(e.target.value)}>
           <option value="ANY">-- ANY --</option>
           <option value="TOP">-- TOP --</option>
           <option value="JUNGLE">-- JUNGLE --</option>

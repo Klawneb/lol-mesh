@@ -95,6 +95,7 @@ export const riotRouter = createTRPCRouter({
         summonerUUID: z.string().optional(),
         start: z.number(),
         amount: z.number(),
+        filter: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -106,6 +107,7 @@ export const riotRouter = createTRPCRouter({
           participants: {
             some: {
               uuid: input.summonerUUID,
+              ...(isPosition(input.filter) ? { position: input.filter } : input.filter != "ANY" ? { champion: input.filter } : {}),
             },
           },
         },

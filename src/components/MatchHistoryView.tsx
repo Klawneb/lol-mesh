@@ -1,37 +1,42 @@
 import type { Match, Participant } from "@prisma/client";
 import { formatDistanceStrict } from "date-fns";
 import Image from "next/image";
-import { MatchWithParticipants } from "../utils/types";
+import { MatchWithParticipants, Summoner } from "../utils/types";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useState } from "react";
 import { api } from "../utils/api";
+import { useAtom } from "jotai";
 
 interface MatchHistoryViewProps {
   puuid: string | undefined;
   isFetching: boolean;
+  summoner: Summoner;
 }
 
-export default function MatchHistoryView({ puuid, isFetching }: MatchHistoryViewProps) {
+export default function MatchHistoryView({ puuid, isFetching, summoner }: MatchHistoryViewProps) {
   const [animationParent] = useAutoAnimate();
   const [matchesShown, setMatchesShown] = useState(10);
   const [isMatchesRemaining, setIsMatchesRemaining] = useState(false);
+  const [summonerFilter, setSummonerFilter] = useAtom(summoner.summonerFilter);
 
   const matchHistory = api.riot.getMatchHistory.useQuery(
     {
       summonerUUID: puuid,
       start: 0,
       amount: matchesShown,
+      filter: summonerFilter,
     },
     {
       refetchInterval: isFetching ? 1500 : false,
       keepPreviousData: true,
       onSuccess: (data) => {
+        console.log(data)
         if (data.length === 0) {
           setIsMatchesRemaining(false);
         } else {
           setIsMatchesRemaining(true);
         }
-      }
+      },
     }
   );
 
