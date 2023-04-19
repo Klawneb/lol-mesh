@@ -20,18 +20,19 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
   const summonerData = api.riot.getSummoner.useQuery(
     {
       region: Regions[region as keyof typeof Regions],
-      summonerName: summoner.name,
+      summonerName: summoner.nameInput,
     },
     {
       enabled: false,
       retry: false,
       cacheTime: 0,
       onSuccess: (data) => {
-        console.log(data)
+        console.log(data);
         setSummoner((prevState) => {
           return {
             ...prevState,
             puuid: data.response.puuid,
+            summonerName: data.response.name,
           };
         });
       },
@@ -45,8 +46,8 @@ export default function SummonerView({ summoner, setSummoner }: SummonerViewProp
   return (
     <div className="w-1/4 flex flex-col items-center bg-base-200 m-4 p-4 rounded-xl">
       <NameInput summoner={summoner} setSummoner={setSummoner} refetch={fetchSummoner} />
-      {summonerData.isFetched && summonerData.data ? <SummonerInfo summoner={summoner} summonerData={summonerData.data?.response} isFetching={isFetching} setIsFetching={setIsFetching}/> : null}
-      <MatchHistoryView puuid={summonerData.data?.response.puuid} isFetching={isFetching} summoner={summoner}/>
+      {summonerData.isFetched && summonerData.data ? <SummonerInfo summoner={summoner} summonerData={summonerData.data?.response} isFetching={isFetching} setIsFetching={setIsFetching} /> : null}
+      <MatchHistoryView puuid={summonerData.data?.response.puuid} isFetching={isFetching} summoner={summoner} />
     </div>
   );
 }

@@ -18,7 +18,7 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
 
   return (
     <>
-      <div className="flex bg-base-100 items-center justify-around rounded-xl">
+      <div className="flex bg-base-100 items-center justify-center rounded-xl h-40">
         <div>
           <p className="text-2xl">All Time Winrate:</p>
           <p className="text-5xl">{totalWinrate.toFixed(2)}%</p>
@@ -38,7 +38,7 @@ export default function WinRateStats({ participants }: WinRateStatsProps) {
           margin={{ bottom: 10, left: 10, right: 10, top: 10 }}
         />
       </div>
-      <div className="flex bg-base-100 items-center justify-around rounded-xl">
+      <div className="flex bg-base-100 items-center justify-center rounded-xl h-40">
         <div>
           <div className="flex items-center">
             <p className="text-2xl align-middle">Winrate last</p>

@@ -17,11 +17,11 @@ export default function NameInput({ summoner, setSummoner, refetch }: NameInputP
       <input
         type="text"
         className="input flex-grow"
-        value={summoner.name}
+        value={summoner.nameInput}
         onChange={(e) =>
           setSummoner({
             ...summoner,
-            name: e.target.value,
+            nameInput: e.target.value,
             puuid: ""
           })
         }

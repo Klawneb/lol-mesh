@@ -18,10 +18,10 @@ export default function GameLengthStats({ matchList }: GameLengthStatsProps) {
   const averageGameLength = totalLength / matchList.length;
 
   return (
-    <div className="flex bg-base-100 p-2 items-center rounded-xl">
-      <div className="ml-[5%]">
+    <div className="flex bg-base-100 p-2 justify-center items-center rounded-xl h-40">
+      <div>
         <p className="text-2xl">Average game length:</p>
-        <p className="text-5xl">{format(averageGameLength, "mm:ss")}</p>
+        <p className="text-5xl text-center">{format(averageGameLength, "mm:ss")}</p>
       </div>
     </div>
   );

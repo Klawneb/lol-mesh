@@ -2,7 +2,8 @@ import { Match, Prisma } from "@prisma/client";
 import { PrimitiveAtom } from "jotai";
 
 export interface Summoner {
-  name: string;
+  nameInput: string;
+  summonerName: string;
   puuid: string;
   summonerFilter: PrimitiveAtom<string>;
 }

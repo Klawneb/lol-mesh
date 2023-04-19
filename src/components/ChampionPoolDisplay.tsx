@@ -10,7 +10,7 @@ export default function ChampionPoolDisplay({ championStats, summonerInfo }: Cha
   const summoner1MaxPlayed = Math.max(...Array.from(championStats.values()).map((c) => c.gamesPlayed));
 
   return (
-    <div className="flex flex-col bg-base-100 h-full p-3 w-1/5">
+    <div className="flex flex-col bg-base-100 h-full p-3 w-1/5 rounded-lg">
       <p className="text-center">{summonerInfo.name} champion pool</p>
       <div className="flex-grow h-0 overflow-scroll scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary">
         {Array.from(championStats.entries())

@@ -8,12 +8,14 @@ import { summoner1FilterAtom, summoner2FilterAtom } from "../utils/atoms";
 
 const Home: NextPage = () => {
   const [summoner1, setSummoner1] = useState<Summoner>({
-    name: "",
+    nameInput: "",
+    summonerName: "",
     puuid: "",
     summonerFilter: summoner1FilterAtom,
   });
   const [summoner2, setSummoner2] = useState<Summoner>({
-    name: "",
+    nameInput: "",
+    summonerName: "",
     puuid: "",
     summonerFilter: summoner2FilterAtom,
   });

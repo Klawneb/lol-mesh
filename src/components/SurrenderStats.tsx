@@ -10,7 +10,7 @@ export default function SurrenderStats({ participants }: SurrenderStatsProps) {
   const surrenderRate = (totalSurrenders / participants.length) * 100;
 
   return (
-    <div className="flex bg-base-100 items-center p-2 justify-around rounded-xl">
+    <div className="flex bg-base-100 items-center p-2 justify-center rounded-xl h-40">
       <div>
         <p className="text-2xl">Surrender Rate:</p>
         <p className="text-5xl">{surrenderRate.toFixed(2)}%</p>
