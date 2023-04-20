@@ -2,6 +2,7 @@ import { Participant } from "@prisma/client";
 import { ChampionStats, MatchWithParticipants, Summoner } from "../utils/types";
 import ChampionPoolDisplay from "./ChampionPoolDisplay";
 import { summoner1FilterAtom, summoner2FilterAtom } from "../utils/atoms";
+import { ComboWinrates } from "./ComboWinrates";
 
 interface ChampionComboStatsProps {
   commonMatches: MatchWithParticipants[];
@@ -41,8 +42,9 @@ export default function ChampionComboStats({ commonMatches, summoner1, summoner2
   return (
     <div className="w-full flex flex-col flex-grow my-3 rounded-xl">
       <div className="w-full flex h-full justify-around">
-        <ChampionPoolDisplay championStats={summoner1ChampStats} summonerInfo={summoner1}/>
-        <ChampionPoolDisplay championStats={summoner2ChampStats} summonerInfo={summoner2}/>
+        <ChampionPoolDisplay championStats={summoner1ChampStats} summoner={summoner1} />
+        <ComboWinrates commonMatches={commonMatches} summoner1={summoner1} summoner2={summoner2} />
+        <ChampionPoolDisplay championStats={summoner2ChampStats} summoner={summoner2} />
       </div>
     </div>
   );

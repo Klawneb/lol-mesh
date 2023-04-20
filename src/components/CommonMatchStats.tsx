@@ -34,9 +34,10 @@ export default function CommonMatchStats({ summoner1, summoner2 }: CommonMatchSt
   const summoner2Participations = commonMatches.data ? commonMatches.data.map((match) => match.participants.find((participant) => participant.uuid === summoner2.puuid)) : [];
 
   return (
-    <div className="flex-grow bg-base-200 m-4 p-4 rounded-xl">
+    <div className="flex-grow bg-base-200 m-4 px-4 rounded-xl">
       {commonMatches.data && commonMatches.data.length > 0 ? (
         <div className="flex flex-col h-full">
+          <p className="text-center items-center text-xl m-1">When {summoner1.summonerName} & {summoner2.summonerName} play together...</p>
           <div className="grid grid-cols-2 gap-3">
             <WinRateStats participants={summoner1Participations} />
             <SurrenderStats participants={summoner1Participations} />

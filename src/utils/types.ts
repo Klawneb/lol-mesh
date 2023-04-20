@@ -19,3 +19,12 @@ export type MatchWithParticipants = Prisma.MatchGetPayload<{
     participants: true;
   };
 }>;
+
+export type ChampionComboRow = {
+  summoner1Champion: string;
+  summoner2Champion: string;
+  totalGames: number;
+  totalWins: number;
+  winrate: number;
+  score: number;
+};
