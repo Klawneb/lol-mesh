@@ -1,10 +1,10 @@
 import { Pie } from "@nivo/pie";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { api } from "../utils/api";
-import { globalFetchingAtom, summoner1FilterAtom, summoner2FilterAtom } from "../utils/atoms";
-import type { MatchWithParticipants, Summoner } from "../utils/types";
-import ChampionComboStats from "./ChampionComboStats";
+import { api } from "../../utils/api";
+import { globalFetchingAtom, summoner1FilterAtom, summoner2FilterAtom } from "../../utils/atoms";
+import type { MatchWithParticipants, Summoner } from "../../utils/types";
+import ChampionComboStats from "../ChampionComboInfo/ChampionComboStats";
 import GameLengthStats from "./GameLengthStats";
 import SurrenderStats from "./SurrenderStats";
 import WinRateStats from "./WinRateStats";
@@ -37,13 +37,15 @@ export default function CommonMatchStats({ summoner1, summoner2 }: CommonMatchSt
     <div className="flex-grow bg-base-200 m-4 px-4 rounded-xl">
       {commonMatches.data && commonMatches.data.length > 0 ? (
         <div className="flex flex-col h-full">
-          <p className="text-center items-center text-xl m-1">When {summoner1.summonerName} & {summoner2.summonerName} play together...</p>
+          <p className="text-center items-center text-xl m-1">
+            When {summoner1.summonerName} & {summoner2.summonerName} play together...
+          </p>
           <div className="grid grid-cols-2 gap-3">
             <WinRateStats participants={summoner1Participations} />
             <SurrenderStats participants={summoner1Participations} />
             <GameLengthStats matchList={commonMatches.data} />
-            <KdaStats participants={summoner1Participations} summoner={summoner1}/>
-            <KdaStats participants={summoner2Participations} summoner={summoner2}/>
+            <KdaStats participants={summoner1Participations} summoner={summoner1} />
+            <KdaStats participants={summoner2Participations} summoner={summoner2} />
           </div>
           <ChampionComboStats commonMatches={commonMatches.data} summoner1={summoner1} summoner2={summoner2} />
         </div>

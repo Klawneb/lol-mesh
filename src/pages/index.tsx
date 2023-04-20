@@ -1,8 +1,8 @@
 import { type NextPage } from "next";
 import { useState } from "react";
-import CommonMatchStats from "../components/CommonMatchStats";
+import CommonMatchStats from "../components/CommonMatchInfo/CommonMatchStats";
 import RegionSelect from "../components/RegionSelect";
-import SummonerView from "../components/SummonerView";
+import SummonerView from "../components/SummonerColumn/SummonerView";
 import type { Summoner } from "../utils/types";
 import { summoner1FilterAtom, summoner2FilterAtom } from "../utils/atoms";
 

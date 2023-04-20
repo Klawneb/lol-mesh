@@ -3,9 +3,9 @@ import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Regions, regionToRegionGroup } from "twisted/dist/constants";
 import type { SummonerV4DTO } from "twisted/dist/models-dto";
-import { api } from "../utils/api";
-import { globalFetchingAtom, regionAtom } from "../utils/atoms";
-import { Summoner } from "../utils/types";
+import { api } from "../../utils/api";
+import { globalFetchingAtom, regionAtom } from "../../utils/atoms";
+import { Summoner } from "../../utils/types";
 
 interface SummonerInfoProps {
   summoner: Summoner;

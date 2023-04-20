@@ -1,6 +1,6 @@
 import { SortingState, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 import { comboColumnDefs, getComboColumnDefs } from "./ComboColumnDefs";
-import { ChampionComboRow } from "../utils/types";
+import { ChampionComboRow } from "../../utils/types";
 import { useState } from "react";
 
 interface ChampionComboTableProps {
@@ -41,9 +41,9 @@ export function ChampionComboTable({ comboData, summoner1Name, summoner2Name }: 
             return (
               <th key={header.id}>
                 {header.isPlaceholder ? null : (
-                  <div onClick={header.column.getToggleSortingHandler()} className="cursor-pointer flex gap-4">
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {direction && <span>{sort_indicator}</span>}
+                  <div onClick={header.column.getToggleSortingHandler()} className="cursor-pointer flex select-none">
+                    <p>{flexRender(header.column.columnDef.header, header.getContext())}</p>
+                    <p>{direction && <span>{sort_indicator}</span>}</p>
                   </div>
                 )}
               </th>

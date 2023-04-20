@@ -1,7 +1,7 @@
 import { Participant } from "@prisma/client";
-import { ChampionStats, MatchWithParticipants, Summoner } from "../utils/types";
+import { ChampionStats, MatchWithParticipants, Summoner } from "../../utils/types";
 import ChampionPoolDisplay from "./ChampionPoolDisplay";
-import { summoner1FilterAtom, summoner2FilterAtom } from "../utils/atoms";
+import { summoner1FilterAtom, summoner2FilterAtom } from "../../utils/atoms";
 import { ComboWinrates } from "./ComboWinrates";
 
 interface ChampionComboStatsProps {

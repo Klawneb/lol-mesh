@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChampionComboRow } from "../utils/types";
+import { ChampionComboRow } from "../../utils/types";
 
 const columnHelper = createColumnHelper<ChampionComboRow>();
 
@@ -36,5 +36,5 @@ export function getComboColumnDefs(summoner1: string, summoner2: string) {
       header: () => <span>Score</span>,
     }),
   ];
-	return comboColumnDefs;
+  return comboColumnDefs;
 }

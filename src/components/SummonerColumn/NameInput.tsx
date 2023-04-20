@@ -1,4 +1,4 @@
-import type { Summoner } from "../utils/types";
+import type { Summoner } from "../../utils/types";
 
 interface NameInputProps {
   summoner: Summoner;
@@ -22,7 +22,7 @@ export default function NameInput({ summoner, setSummoner, refetch }: NameInputP
           setSummoner({
             ...summoner,
             nameInput: e.target.value,
-            puuid: ""
+            puuid: "",
           })
         }
       />

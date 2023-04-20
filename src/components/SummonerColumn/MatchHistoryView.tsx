@@ -1,10 +1,10 @@
 import type { Match, Participant } from "@prisma/client";
 import { formatDistanceStrict } from "date-fns";
 import Image from "next/image";
-import { MatchWithParticipants, Summoner } from "../utils/types";
+import { MatchWithParticipants, Summoner } from "../../utils/types";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useState } from "react";
-import { api } from "../utils/api";
+import { api } from "../../utils/api";
 import { useAtom } from "jotai";
 
 interface MatchHistoryViewProps {
@@ -30,7 +30,7 @@ export default function MatchHistoryView({ puuid, isFetching, summoner }: MatchH
       refetchInterval: isFetching ? 1500 : false,
       keepPreviousData: true,
       onSuccess: (data) => {
-        console.log(data)
+        console.log(data);
         if (data.length < matchesShown) {
           setIsMatchesRemaining(false);
         } else {

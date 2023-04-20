@@ -1,6 +1,6 @@
 import { Participant } from "@prisma/client";
-import { ChampionComboRow, MatchWithParticipants, Summoner } from "../utils/types";
-import { wilsonScore } from "../utils/wilsonScore";
+import { ChampionComboRow, MatchWithParticipants, Summoner } from "../../utils/types";
+import { wilsonScore } from "../../utils/wilsonScore";
 import { ChampionComboTable } from "./ChampionComboTable";
 
 interface ComboWinratesProps {
@@ -57,7 +57,7 @@ export function ComboWinrates({ commonMatches, summoner1, summoner2 }: ComboWinr
     <div className="flex flex-col bg-base-100 mx-3 p-3 rounded-lg">
       <p className="text-center">Champion Combo Winrates</p>
       <div className="flex-grow h-0 rounded-lg overflow-scroll scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary">
-        <ChampionComboTable comboData={tableData} summoner1Name={summoner1.summonerName} summoner2Name={summoner2.summonerName}/>
+        <ChampionComboTable comboData={tableData} summoner1Name={summoner1.summonerName} summoner2Name={summoner2.summonerName} />
       </div>
     </div>
   );
