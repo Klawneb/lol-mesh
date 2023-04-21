@@ -18,12 +18,12 @@ export function getComboColumnDefs(summoner1: string, summoner2: string) {
     columnHelper.accessor((row) => row.totalGames, {
       id: "total_games",
       cell: (info) => info.getValue(),
-      header: () => <span>Total Games</span>,
+      header: () => <span>Games</span>,
     }),
     columnHelper.accessor((row) => row.totalWins, {
       id: "total_wins",
       cell: (info) => info.getValue(),
-      header: () => <span>Total Wins</span>,
+      header: () => <span>Wins</span>,
     }),
     columnHelper.accessor((row) => row.winrate, {
       id: "winrate",

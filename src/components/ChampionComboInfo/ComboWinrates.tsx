@@ -54,9 +54,9 @@ export function ComboWinrates({ commonMatches, summoner1, summoner2 }: ComboWinr
   });
 
   return (
-    <div className="flex flex-col bg-base-100 mx-3 p-3 rounded-lg">
+    <div className="flex flex-col bg-base-100 mx-3 p-3 rounded-lg flex-grow">
       <p className="text-center">Champion Combo Winrates</p>
-      <div className="flex-grow h-0 rounded-lg overflow-scroll scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary">
+      <div className="flex-grow h-0 rounded-lg overflow-scroll scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary w-full">
         <ChampionComboTable comboData={tableData} summoner1Name={summoner1.summonerName} summoner2Name={summoner2.summonerName} />
       </div>
     </div>

@@ -26,7 +26,7 @@ export function ChampionComboTable({ comboData, summoner1Name, summoner2Name }: 
   const rows = table.getRowModel().rows;
 
   return (
-    <table className="table table-zebra">
+    <table className="table table-zebra table-compact w-full">
       <thead className="top-0 sticky">
         <tr>
           {headers.map((header) => {
@@ -41,7 +41,7 @@ export function ChampionComboTable({ comboData, summoner1Name, summoner2Name }: 
             return (
               <th key={header.id}>
                 {header.isPlaceholder ? null : (
-                  <div onClick={header.column.getToggleSortingHandler()} className="cursor-pointer flex select-none">
+                  <div onClick={header.column.getToggleSortingHandler()} className="cursor-pointer flex select-none overflow-hidden">
                     <p>{flexRender(header.column.columnDef.header, header.getContext())}</p>
                     <p>{direction && <span>{sort_indicator}</span>}</p>
                   </div>
