@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChampionComboRow } from "../../utils/types";
+import type { ChampionComboRow } from "../../utils/types";
 
 const columnHelper = createColumnHelper<ChampionComboRow>();
 

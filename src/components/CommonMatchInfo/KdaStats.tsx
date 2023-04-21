@@ -1,6 +1,5 @@
-import { Pie } from "@nivo/pie";
 import type { Participant } from "@prisma/client";
-import { Summoner } from "../utils/types";
+import type { Summoner } from "../../utils/types";
 import { useAtom } from "jotai";
 
 interface KdaStatsProps {

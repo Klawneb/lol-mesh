@@ -1,5 +1,5 @@
-import { PrimitiveAtom, useAtom } from "jotai";
-import { ChampionStats, Summoner } from "../../utils/types";
+import { useAtom } from "jotai";
+import type { ChampionStats, Summoner } from "../../utils/types";
 
 interface ChampionPoolDisplayProps {
   championStats: Map<string, ChampionStats>;

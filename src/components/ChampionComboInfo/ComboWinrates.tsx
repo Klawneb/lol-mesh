@@ -1,5 +1,5 @@
-import { Participant } from "@prisma/client";
-import { ChampionComboRow, MatchWithParticipants, Summoner } from "../../utils/types";
+import type { Participant } from "@prisma/client";
+import type { ChampionComboRow, MatchWithParticipants, Summoner } from "../../utils/types";
 import { wilsonScore } from "../../utils/wilsonScore";
 import { ChampionComboTable } from "./ChampionComboTable";
 

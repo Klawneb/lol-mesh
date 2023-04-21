@@ -1,9 +1,7 @@
-import { Pie } from "@nivo/pie";
 import { useAtom } from "jotai";
-import { useState } from "react";
 import { api } from "../../utils/api";
 import { globalFetchingAtom, summoner1FilterAtom, summoner2FilterAtom } from "../../utils/atoms";
-import type { MatchWithParticipants, Summoner } from "../../utils/types";
+import type { Summoner } from "../../utils/types";
 import ChampionComboStats from "../ChampionComboInfo/ChampionComboStats";
 import GameLengthStats from "./GameLengthStats";
 import SurrenderStats from "./SurrenderStats";

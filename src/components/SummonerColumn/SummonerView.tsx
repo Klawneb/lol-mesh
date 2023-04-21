@@ -1,6 +1,6 @@
-import { Participant } from "@prisma/client";
 import { useAtom } from "jotai";
-import { Dispatch, SetStateAction, useState } from "react";
+import type { Dispatch, SetStateAction} from "react";
+import { useState } from "react";
 import { Regions } from "twisted/dist/constants";
 import { api } from "../../utils/api";
 import { regionAtom } from "../../utils/atoms";

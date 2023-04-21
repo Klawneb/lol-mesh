@@ -1,7 +1,5 @@
-import { Pie } from "@nivo/pie";
-import type { Match } from "@prisma/client";
 import { format } from "date-fns";
-import { MatchWithParticipants } from "../utils/types";
+import type { MatchWithParticipants } from "../../utils/types";
 
 interface GameLengthStatsProps {
   matchList: MatchWithParticipants[];

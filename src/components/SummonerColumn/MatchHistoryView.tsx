@@ -1,7 +1,6 @@
-import type { Match, Participant } from "@prisma/client";
 import { formatDistanceStrict } from "date-fns";
 import Image from "next/image";
-import { MatchWithParticipants, Summoner } from "../../utils/types";
+import type { Summoner } from "../../utils/types";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useState } from "react";
 import { api } from "../../utils/api";
