@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
-import type { Dispatch, SetStateAction} from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { Regions, regionToRegionGroup } from "twisted/dist/constants";
 import type { SummonerV4DTO } from "twisted/dist/models-dto";
@@ -65,7 +65,7 @@ export default function SummonerInfo({ summoner, summonerData, isFetching, setIs
   }
 
   return (
-    <div className="bg-base-100 w-full mt-2 flex justify-between rounded-lg">
+    <div className="bg-base-100 w-full mt-2 flex rounded-lg">
       <Image
         alt="summoner-icon"
         src={`https://ddragon.leagueoflegends.com/cdn/13.1.1/img/profileicon/${summonerData?.profileIconId}.png`}
@@ -73,50 +73,51 @@ export default function SummonerInfo({ summoner, summonerData, isFetching, setIs
         height={128}
         className="w-24 h-24 m-4 rounded-lg"
       />
-      <div className="flex flex-col my-auto ml-2 max-w overflow-hidden">
-        <p className="text-4xl font-semibold truncate ">{summonerData.name}</p>
-        <p className="mt-2 text-xl">Level {summonerData.summonerLevel}</p>
-      </div>
-      <div className="flex flex-col justify-center items-center">
-        <p>Filter:</p>
-        <select className="select select-bordered bg-base-200" onChange={(e) => setSummonerFilter(e.target.value)}>
-          <option value="ANY">-- ANY --</option>
-          <option value="TOP">-- TOP --</option>
-          <option value="JUNGLE">-- JUNGLE --</option>
-          <option value="MIDDLE">-- MID --</option>
-          <option value="BOTTOM">-- BOT --</option>
-          <option value="UTILITY">-- SUPPORT --</option>
-          {champPool.data &&
-            champPool.data.sort().map((champName) => {
-              return (
-                <option key={champName} value={champName}>
-                  {champName}
-                </option>
-              );
-            })}
-        </select>
-      </div>
-      <div className="flex flex-col my-auto mr-4">
-        <button
-          onClick={async () => {
-            setChecking(true);
-            const outstandingIDs = await updateMatchHistory.mutateAsync({
-              uuid: summonerData.puuid,
-              regionGroup: regionToRegionGroup(Regions[region as keyof typeof Regions]),
-            });
-            if (outstandingIDs.length === 0) {
-              toggleUpToDate();
-            } else {
-              setOutstandingIDs(outstandingIDs);
-              setIsFetching(true);
-              setGlobalFetching(true);
-            }
-            setChecking(false);
-          }}
-          className={`btn btn-secondary transition-all ${upToDate ? "btn-info disabled" : ""} ${isFetching || checking ? "loading btn-info disabled" : ""}`}
-        >
-          {checking ? "Checking" : upToDate ? "Up to date" : isFetching ? `Fetching ${fetchedMatches.data ?? "?"}/${outstandingIDs.length}` : "Update"}
-        </button>
+      <div className="flex flex-col flex-grow justify-center">
+        <div className="flex max-w-full items-center overflow-hidden py-2">
+          <p className="text-4xl font-semibold">{summonerData.name}</p>
+          <p className="text-4xl">-</p>
+          <p className="text-2xl">Level {summonerData.summonerLevel}</p>
+        </div>
+        <div className="flex items-center">
+          <p>Filter:</p>
+          <select className="select select-bordered bg-base-200 ml-2" onChange={(e) => setSummonerFilter(e.target.value)}>
+            <option value="ANY">-- ANY --</option>
+            <option value="TOP">-- TOP --</option>
+            <option value="JUNGLE">-- JUNGLE --</option>
+            <option value="MIDDLE">-- MID --</option>
+            <option value="BOTTOM">-- BOT --</option>
+            <option value="UTILITY">-- SUPPORT --</option>
+            {champPool.data &&
+              champPool.data.sort().map((champName) => {
+                return (
+                  <option key={champName} value={champName}>
+                    {champName}
+                  </option>
+                );
+              })}
+          </select>
+          <button
+            onClick={async () => {
+              setChecking(true);
+              const outstandingIDs = await updateMatchHistory.mutateAsync({
+                uuid: summonerData.puuid,
+                regionGroup: regionToRegionGroup(Regions[region as keyof typeof Regions]),
+              });
+              if (outstandingIDs.length === 0) {
+                toggleUpToDate();
+              } else {
+                setOutstandingIDs(outstandingIDs);
+                setIsFetching(true);
+                setGlobalFetching(true);
+              }
+              setChecking(false);
+            }}
+            className={`btn btn-secondary transition-all ml-4 ${upToDate ? "btn-info disabled" : ""} ${isFetching || checking ? "loading btn-info disabled" : ""}`}
+          >
+            {checking ? "Checking" : upToDate ? "Up to date" : isFetching ? `Fetching ${fetchedMatches.data ?? "?"}/${outstandingIDs.length}` : "Update"}
+          </button>
+        </div>
       </div>
     </div>
   );
