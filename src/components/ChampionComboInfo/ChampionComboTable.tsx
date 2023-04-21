@@ -1,5 +1,5 @@
 import { SortingState, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { comboColumnDefs, getComboColumnDefs } from "./ComboColumnDefs";
+import { getComboColumnDefs } from "./ComboColumnDefs";
 import { ChampionComboRow } from "../../utils/types";
 import { useState } from "react";
 
